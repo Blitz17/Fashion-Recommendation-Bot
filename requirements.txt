@@ -1,0 +1,7 @@
+streamlit
+pandas
+pillow
+openai
+azure-ai-vision-imageanalysis
+azure-core
+python-dotenv
