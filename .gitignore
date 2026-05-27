@@ -1,6 +1,7 @@
 .env
 __pycache__/
 *.pyc
-dataset/
 screenshots/
 .vscode/
+dataset/myntradataset/
+dataset/
