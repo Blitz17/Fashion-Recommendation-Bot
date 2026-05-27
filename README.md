@@ -35,5 +35,7 @@ Download, extract and add this in a folder called "dataset" in your root folder.
 
 ## Run Locally
 Create Azure AI service and Azure OpenAI resources and enter the key and endpoints in .env file
-Install dependencies: pip install -r requirements.txt
-Run application: streamlit run app.py
+Install dependencies:
+pip install -r requirements.txt
+Run application: 
+streamlit run app.py
