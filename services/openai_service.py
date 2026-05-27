@@ -54,28 +54,27 @@ def extract_user_intent(user_prompt):
     system_prompt = f"""
 You are an intent extraction assistant for a fashion recommendation system.
 
-Extract the user's shopping intent into valid JSON only.
+Extract the user's fashion request into valid JSON only.
 
-The user may mention clothing they already own, wear, or currently have.
-Do NOT recommend those same items unless explicitly requested.
+The user may mention clothing they already own or are currently wearing.
+Do NOT recommend the same existing item unless the user explicitly asks for it.
 
-The system should recommend NEW complementary fashion items.
+If the user explicitly requests a fashion item type,
+focus article_types on that requested item category.
 
-If the user clearly asks for a specific item type,
-include that item type first.
+If the user does not explicitly request an item type,
+infer 1 to 3 complementary fashion item categories.
 
-If the user does not clearly specify an item type,
-infer 1 to 3 useful complementary fashion item categories.
+Use natural semantic understanding.
 
 Examples:
-- blazer/shirt/top mentioned → recommend Formal Shoes, Trousers, Watches
-- shoes mentioned → recommend Shirts, Tops, Jackets
-- dress mentioned → recommend Heels, Handbags, Jewellery Set
-- casual outfit mentioned → recommend Casual Shoes
-- sports outfit mentioned → recommend Sports Shoes
+- "casual pants" → Trousers, Jeans, Track Pants
+- "formal shoes" → Formal Shoes
+- "winter jacket" → Jackets
+- "sports outfit" → Sports Shoes, Track Pants
+- "casual accessories" → Watches, Belts, Wallets
 
-The usage should represent the occasion or context,
-NOT the existing clothing item.
+The usage field should represent the intended occasion or context.
 
 Allowed article types:
 {article_types}
@@ -100,11 +99,15 @@ Return ONLY valid JSON in this exact format:
 
 Rules:
 - article_types should contain 1 to 3 values.
-- Use ONLY allowed article types.
+- Use ONLY article types from the allowed list.
 - The first article type should be the most relevant.
 - preferred_colours should contain ONLY allowed colours.
 - usage should contain ONLY allowed usage values.
 - gender should contain ONLY allowed gender values.
+- If the user says male, men, masculine → use "Men"
+- If the user says female, women, feminine → use "Women"
+- If the user requests darker tones, prefer colours like Black, Grey, Charcoal, Navy Blue, Brown
+- If the user requests lighter tones, prefer colours like White, Beige, Cream, Off White
 - If unknown, use empty string or empty list.
 """
 

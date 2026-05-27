@@ -5,7 +5,6 @@ def get_vision_preferences(vision_context):
     ]
 
     caption = vision_context.get("caption", "").lower()
-
     combined_text = " ".join(tags) + " " + caption
 
     preferred_article_types = []
@@ -19,16 +18,12 @@ def get_vision_preferences(vision_context):
             if value not in target_list:
                 target_list.append(value)
 
-    # -------------------------
-    # Colour extraction
-    # -------------------------
-
     colour_map = {
         "black": "Black",
         "white": "White",
         "blue": "Blue",
-        "navy": "Navy Blue",
         "navy blue": "Navy Blue",
+        "navy": "Navy Blue",
         "grey": "Grey",
         "gray": "Grey",
         "brown": "Brown",
@@ -47,13 +42,9 @@ def get_vision_preferences(vision_context):
         "silver": "Silver"
     }
 
-    for key, dataset_colour in colour_map.items():
-        if key in combined_text:
+    for keyword, dataset_colour in colour_map.items():
+        if keyword in combined_text:
             add_unique(preferred_colours, [dataset_colour])
-
-    # -------------------------
-    # Existing topwear detected
-    # -------------------------
 
     if (
         "shirt" in combined_text
@@ -61,79 +52,74 @@ def get_vision_preferences(vision_context):
         or "tshirt" in combined_text
         or "tee" in combined_text
         or "top" in combined_text
-        or "hoodie" in combined_text
-        or "sweatshirt" in combined_text
         or "blouse" in combined_text
     ):
+        style_type = "casual"
+        preferred_usage = "Casual"
+
         add_unique(
             avoided_article_types,
             [
                 "Shirts",
                 "Tshirts",
-                "Tops",
-                "Sweatshirts"
+                "Tops"
             ]
         )
 
         add_unique(
             preferred_article_types,
             [
-                "Jeans",
                 "Trousers",
+                "Jeans",
+                "Track Pants",
                 "Shorts",
                 "Casual Shoes",
                 "Watches",
-                "Backpacks",
-                "Handbags"
+                "Belts"
             ]
         )
-
-        style_type = "casual"
-        preferred_usage = "Casual"
-
-    # -------------------------
-    # Hoodie / streetwear
-    # -------------------------
 
     if (
         "hoodie" in combined_text
         or "sweatshirt" in combined_text
     ):
+        style_type = "streetwear"
+        preferred_usage = "Casual"
+
+        add_unique(
+            avoided_article_types,
+            [
+                "Sweatshirts",
+                "Tshirts",
+                "Tops",
+                "Formal Shoes",
+                "Suits",
+                "Blazers",
+                "Ties"
+            ]
+        )
+
         add_unique(
             preferred_article_types,
             [
                 "Casual Shoes",
                 "Sports Shoes",
                 "Jackets",
-                "Caps",
+                "Track Pants",
+                "Jeans",
                 "Backpacks",
-                "Track Pants"
+                "Caps"
             ]
         )
-
-        add_unique(
-            avoided_article_types,
-            [
-                "Formal Shoes",
-                "Suits",
-                "Blazers",
-                "Ties",
-                "Ties and Cufflinks"
-            ]
-        )
-
-        style_type = "streetwear"
-        preferred_usage = "Casual"
-
-    # -------------------------
-    # Formal upperwear detected
-    # -------------------------
 
     if (
         "blazer" in combined_text
         or "suit" in combined_text
-        or "formal" in combined_text
+        or "formal shirt" in combined_text
     ):
+        style_type = "formal"
+        preferred_usage = "Formal"
+
         add_unique(
             avoided_article_types,
             [
@@ -149,23 +135,19 @@ def get_vision_preferences(vision_context):
                 "Formal Shoes",
                 "Trousers",
                 "Watches",
-                "Ties",
                 "Belts",
-                "Wallets"
+                "Wallets",
+                "Ties"
             ]
         )
-
-        style_type = "formal"
-        preferred_usage = "Formal"
-
-    # -------------------------
-    # Dress detected
-    # -------------------------
 
     if (
         "dress" in combined_text
         or "gown" in combined_text
     ):
+        style_type = "party"
+        preferred_usage = "Party"
+
         add_unique(
             avoided_article_types,
             [
@@ -185,48 +167,6 @@ def get_vision_preferences(vision_context):
                 "Watches"
             ]
         )
-
-        style_type = "party"
-        preferred_usage = "Party"
-
-    # -------------------------
-    # Jeans / bottomwear detected
-    # -------------------------
-
-    if (
-        "jeans" in combined_text
-        or "trousers" in combined_text
-        or "pants" in combined_text
-        or "shorts" in combined_text
-        or "skirt" in combined_text
-    ):
-        add_unique(
-            avoided_article_types,
-            [
-                "Jeans",
-                "Trousers",
-                "Shorts",
-                "Skirts",
-                "Track Pants"
-            ]
-        )
-
-        add_unique(
-            preferred_article_types,
-            [
-                "Shirts",
-                "Tshirts",
-                "Tops",
-                "Jackets",
-                "Casual Shoes",
-                "Formal Shoes",
-                "Watches"
-            ]
-        )
-
-    # -------------------------
-    # Shoes detected
-    # -------------------------
 
     if (
         "shoe" in combined_text
@@ -263,47 +203,6 @@ def get_vision_preferences(vision_context):
             ]
         )
 
-    # -------------------------
-    # Sportswear detected
-    # -------------------------
-
-    if (
-        "sports" in combined_text
-        or "sport" in combined_text
-        or "gym" in combined_text
-        or "fitness" in combined_text
-        or "active" in combined_text
-    ):
-        add_unique(
-            preferred_article_types,
-            [
-                "Sports Shoes",
-                "Track Pants",
-                "Tracksuits",
-                "Tshirts",
-                "Caps",
-                "Wristbands",
-                "Water Bottle"
-            ]
-        )
-
-        add_unique(
-            avoided_article_types,
-            [
-                "Formal Shoes",
-                "Suits",
-                "Blazers",
-                "Ties"
-            ]
-        )
-
-        style_type = "sports"
-        preferred_usage = "Sports"
-
-    # -------------------------
-    # Bag detected
-    # -------------------------
-
     if (
         "bag" in combined_text
         or "backpack" in combined_text
@@ -335,10 +234,6 @@ def get_vision_preferences(vision_context):
                 "Belts"
             ]
         )
-
-    # -------------------------
-    # Accessories detected
-    # -------------------------
 
     if (
         "watch" in combined_text
@@ -373,9 +268,37 @@ def get_vision_preferences(vision_context):
             ]
         )
 
-    # -------------------------
-    # Weather / outerwear clues
-    # -------------------------
+    if (
+        "sports" in combined_text
+        or "sport" in combined_text
+        or "gym" in combined_text
+        or "fitness" in combined_text
+    ):
+        style_type = "sports"
+        preferred_usage = "Sports"
+
+        add_unique(
+            preferred_article_types,
+            [
+                "Sports Shoes",
+                "Track Pants",
+                "Tracksuits",
+                "Tshirts",
+                "Caps",
+                "Wristbands",
+                "Water Bottle"
+            ]
+        )
+
+        add_unique(
+            avoided_article_types,
+            [
+                "Formal Shoes",
+                "Suits",
+                "Blazers",
+                "Ties"
+            ]
+        )
 
     if (
         "winter" in combined_text

@@ -18,9 +18,7 @@ columns_to_check = [
 
 for column in columns_to_check:
 
-    print(f"\n{'=' * 50}")
     print(column.upper())
-    print(f"{'=' * 50}\n")
 
     values = sorted(
         df[column]

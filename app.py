@@ -34,6 +34,14 @@ uploaded_image = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
+if uploaded_image is not None:
+
+    st.image(
+        uploaded_image,
+        caption="Uploaded Clothing Image",
+        width=250
+    )
+
 user_prompt = st.text_area(
     "Describe what you are looking for"
 )
